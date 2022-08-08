@@ -1,4 +1,4 @@
-# Knowlege base of the Core Unit Bioinformatics
+# Knowledge base of the Core Unit Bioinformatics
 
 This is the right place to share helpful information with your peers, your clients and the outside world.
 
