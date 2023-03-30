@@ -7,18 +7,18 @@
 		1. [Creating a parameter file](#Creatinga)
 		2. [Configuration for your Infrastructure](#Configurationfor)
     3. [Running the workflow](#Runningthe)
-## What is Nextflow and Nextflow core? <a name="Whatis"></a>
+## What is Nextflow and Nextflow core? <a id="Whatis"></a>
 
 [Nextflow](https://www.nextflow.io/) is a workflow scripting language commonly used in bioinformatic applications. 
 Around nextflow, a large community of researchers develops standards for pipelines and provides a big catalogue of curated workflows called [nextflow core (nf-core)](https://nf-co.re/).
 The nf-core community also provides a toolbox package `nf-core` for creating and running workflows, available through [pip](https://pypi.org/project/nf-core/) and [bioconda](https://anaconda.org/bioconda/nf-core).
 
-## Running nf-core workflows <a name="Runningnf"></a>
+## Running nf-core workflows <a id="Runningnf"></a>
 
 You were browsing through the [nf-core workflow catalogue](https://nf-co.re/pipelines) and found the desired workflow? 
 Great! The next steps guide you through the process of running it on CUBI infrastructure.
 
-### 1. Download everything necessary for the workflow <a name="Downloadeverything"></a>
+### 1. Download everything necessary for the workflow <a id="Downloadeverything"></a>
 
 It is recommended to download the workflow, also for offline usage. 
 More information at [https://nf-co.re/docs/usage/offline](https://nf-co.re/docs/usage/offline).
@@ -49,7 +49,7 @@ Within your nextflow parameters, you need to specify the igenomes base directory
 If `igenomes_base` is not defined, it will automatically catch it from the internet source defined in `conf/igenomes.config`.  
 Further, some workflows require workflow-specific references that need to be separately downloaded, e.g., the VEP cache in sarek.
 
-### 2. Configuration of workflow <a name="Configurationof"></a>
+### 2. Configuration of workflow <a id="Configurationof"></a>
 
 Nextflow comes with a great number of possibilities to provide configuration of your workflow, which can be very powerful (and sometimes confusing).
 The configuration for Nextflow workflows can be defined on different levels and are applied with the following priority:  
@@ -72,7 +72,7 @@ Generally, the following structure for storing configuration is recommended:
 Options 4.-7. are mostly relevant for workflow development, e.g., to set default parameters or preconfigure processes.
 Within nf-core workflows, it is not necessary to change the nextflow.config file within the pipeline.
 
-#### 2.1 Creating a parameter file <a name="Creatinga"></a>
+#### 2.1 Creating a parameter file <a id="Creatinga"></a>
 
 Use the `nf-core launch` command!
 For example, after you downloaded the sarek workflow:
@@ -85,7 +85,7 @@ In the end, it will create the `nf-params.json`, which can be provided via the -
 
 For choosing the right parameters and writing the `samplesheet.csv`, you can read the documentation of the respective workflow, e.g., for sarek at [https://nf-co.re/sarek](https://nf-co.re/sarek).
 
-#### 2.2 Configuration for your Infrastructure <a name="Configurationfor"></a>
+#### 2.2 Configuration for your Infrastructure <a id="Configurationfor"></a>
 
 The previously mentioned institutional configs contain infrastructure-specific configurations.
 For now, no HHU or UKD config file exists, but may be added in the future.  
@@ -185,7 +185,7 @@ process {
 
 More information about nf-core configurations can be found at [https://nf-co.re/usage/configuration](https://nf-co.re/usage/configuration).
 
-### 3. Running the workflow <a name="Runningthe"></a>
+### 3. Running the workflow <a id="Runningthe"></a>
 
 You downloaded all files, specified your parameters in `nf-params.json` and added the infrastructure configuration?
 Great! Now, you can run your workflow using the `nextflow run` command, e.g., for the sarek workflow on HILBERT:
