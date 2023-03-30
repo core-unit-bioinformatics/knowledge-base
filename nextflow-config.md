@@ -2,7 +2,7 @@
 # Table of contents
 1. [What is Nextflow and Nextflow core?](#Whatis)
 2. [Running nf-core workflows](#Runningnf)
-	1. [Download everything necessary for the workflow](#Downloadeverything)
+	1. [Download the workflow / offline usage](#Downloadeverything)
 	2. [Configuration of workflow](#Configurationof)
 		1. [Creating a parameter file](#Creatinga)
 		2. [Configuration for your Infrastructure](#Configurationfor)
@@ -18,9 +18,10 @@ The nf-core community also provides a toolbox package `nf-core` for creating and
 You were browsing through the [nf-core workflow catalogue](https://nf-co.re/pipelines) and found the desired workflow? 
 Great! The next steps guide you through the process of running it on CUBI infrastructure.
 
-### 1. Download everything necessary for the workflow <a id="Downloadeverything"></a>
+### 1. Download the workflow / offline usage <a id="Downloadeverything"></a>
 
-It is recommended to download the workflow, also for offline usage. 
+It is recommended to download the workflow, also for offline usage.
+For offline usage, also add `export NXF_OFFLINE='TRUE'` to your `.bashrc` or scripts to avoid nextflow looking online for updates.
 More information at [https://nf-co.re/docs/usage/offline](https://nf-co.re/docs/usage/offline).
 This is quickly done using `nf-core download`, which is part of the nf-core tools package and prompts you through the necessary options for downloading.
 You can also specify them through the CL (Command Line), here is an example for the nf-core sarek workflow:
