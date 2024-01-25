@@ -4,6 +4,7 @@ Table of contents
 
 1. [What is Nextflow and Nextflow core?](#Whatis)
 2. [Running nf-core workflows](#Runningnf)
+   0. [Install nextflow and nf-core](#installation)
    1. [Download the workflow / offline usage](#Downloadeverything)
    2. [Configuration of workflow](#Configurationof)
       1. [Creating a parameter file](#Creatinga)
@@ -24,20 +25,39 @@ The nf-core community also provides a toolbox package `nf-core` for creating and
 You were browsing through the [nf-core workflow catalogue](https://nf-co.re/pipelines) and found the desired workflow?
 Great! The next steps guide you through the process of running it on CUBI infrastructure.
 
+### 0. Install nextflow und nf-core packages in conda environment  <a id="installation"></a>
+
+To avoid annoying dependency issues the `nextflow` and `nf-core` packages should be installed and run via a conda environment.
+A working `yml` file for which this guide was tested looks like this:
+
+```
+name: nextflow-env
+dependencies:
+  - Python=3.10.*
+  - mamba=1.5.6
+  - nextflow=23.10.1
+  - nf-core=2.11.1
+  - singularity=3.7.1
+```
+
 ### 1. Download the workflow / offline usage <a id="Downloadeverything"></a>
 
 It is recommended to download the workflow, also for offline usage.
 For offline usage of Nextflow, also add `export NXF_OFFLINE='TRUE'` to your `.bashrc` or scripts to avoid nextflow looking online for updates.
 More information at [https://nf-co.re/docs/usage/offline](https://nf-co.re/docs/usage/offline).
 
-The download can be automatic using the `nf-core download` command, which is part of the nf-core tools package and prompts you through the necessary options for downloading.
-You can also specify them through the CL (Command Line), here is an example for the nf-core sarek workflow:
+The download can be automated using the `nf-core download` command, which is part of the nf-core tools package and prompts you through the necessary options for downloading.
+You can also specify them through the CL (Command Line).
+
+NOTE: Nextflow can store and pull previously downloaded singularity images from a local cache folder, which is recommended to set using the `NXF_SINGULARITY_CACHEDIR` environemnt variable (also see [here](https://www.nextflow.io/docs/latest/singularity.html#singularity-docker-hub))
+
+Here is an example for the nf-core bamtofastq workflow:
 
 ```bash
-nf-core download sarek --revision 3.1.2 --compress none --container singularity
+nf-core download bamtofastq --revision 2.1.0 --compress none --container-system singularity
 ```
 
-This will create the following three folders within `nf-core-sarek-3.1.2/`:
+This will create the following three folders within `nf-core-bamtofastq-2.1.0/`:
 
 1. `workflow/`: Workflow code from github repository.
 2. `singularity`: Containers for workflow processes, e.g., singularity containers.
@@ -50,7 +70,7 @@ You can get the download command for specific datasets from [AWS-iGenomes](https
 For example, downloading the human reference genome GRCh38 assembled for usage with GATK:
 
 ```bash
-aws s3 --no-sign-request --region eu-west-1 sync s3://ngi-igenomes/igenomes/Homo_sapiens/GATK/GRCh38/db/references/Homo_sapiens/GATK/GRCh38/
+aws s3 --no-sign-request --region eu-west-1 sync s3://ngi-igenomes/igenomes/Homo_sapiens/GATK/GRCh38/ db/references/Homo_sapiens/GATK/GRCh38/
 ```
 
 Within your nextflow parameters, you need to specify the igenomes base directory and the reference genome using the parameters `igenomes_base` (pointing to the iGenomes directory, e.g. `db/references/`) and `genome` (Name of reference downloaded, e.g. `GATK.GRCh38`).
@@ -65,17 +85,17 @@ For generally configuring nextflow workflows for your infrastructure, see the [n
 
 The params file is required for configuring your nf-core workflow.
 For this, you can use the `nf-core launch` command.
-For example, after you downloaded the sarek workflow:
+For example, after you downloaded the bamtofastq workflow:
 
 ```
-nf-core launch -x -a nf-core-sarek-3.1.2/workflow/
+nf-core launch -x -a nf-core-bamtofastq-2.1.0/workflow/
 ```
 
 The `-a` and `-x` flags ensure, all parameters will be displayed and configurable.  
 You will be guided through a web or CL-based interface to configure all parameters.
 In the end, it will create the `nf-params.json`, which can be provided via the -params-file flag.
 
-For choosing the right parameters and writing the `samplesheet.csv`, you can read the documentation of the respective workflow, e.g., for sarek at [https://nf-co.re/sarek](https://nf-co.re/sarek).
+For choosing the right parameters and writing the `samplesheet.csv`, you can read the documentation of the respective workflow, e.g., for bamtofastq at [https://nf-co.re/bamtofastq](https://nf-co.re/bamtofastq).
 
 #### 2.2 Predefined configuration profiles <a id="Predefconfig"></a>
 
@@ -104,9 +124,12 @@ More information at [max-resources](https://nf-co.re/docs/usage/configuration#ma
 
 #### 2.4 Optional: Modify resources for specific processes <a id="Modres"></a>
 
-Within a `run.config` file, you can optionally modify the specific process resource requirements of the nf-core workflows within the _process_ scope.
-This step is recommended if a workflow fails because of limited resources.
-Each process contains a label that specifies its resource requirements (see `nextflow.config` file) that can be overwritten in `run.config`, e.g., like this for the medium label:
+The resource requirements of nextflow processes are specified in process labels which are defined in the `base.config` file within the workflow.
+If a process exits because of lacking resources, Nextflow automatically retries the process with doubled resources until it reaches the specified `max_memory`, `max_cpus` or `max_time` values. Hence, you can increase these parameters and restart the process.
+
+To avoid long runtimes, e.g., due to several retries by nextflow or too low numbers of CPU cores for big datasets, you can also increase the resource requirements for specific processes in the _process_ scope within a separate `run.config` file.
+
+Each process contains a label that specifies its resource requirements (see `nextflow.config` file) that can be overwritten, e.g., like this for the medium label:
 
 ```
 process {
@@ -115,6 +138,8 @@ process {
   }
 }
 ```
+
+More information at [tuning-workflow-resources](https://nf-co.re/docs/usage/configuration#tuning-workflow-resources)
 
 #### 2.5 Optional: Extra arguments for processes <a id="Exttraarg"></a>
 
@@ -133,10 +158,10 @@ More information about nf-core configurations can be found at [https://nf-co.re/
 ### 3. Running the workflow <a id="Runningthe"></a>
 
 You downloaded all files, specified your parameters in `nf-params.json` and added the infrastructure configuration as separate profile in `run.config`?
-Great! Now, you can run your workflow using the `nextflow run` command, e.g., for the sarek workflow on HILBERT:
+Great! Now, you can run your workflow using the `nextflow run` command, e.g., for the bamtofastq workflow on HILBERT:
 
 ```
-nextflow run nf-core-sarek-3.1.2/workflow \
+nextflow run nf-core-bamtofastq-2.1.0/workflow \
 -profile singularity,hilbert \
 -c run.config \
 -params-file nf-params.json
