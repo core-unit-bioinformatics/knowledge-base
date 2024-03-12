@@ -6,7 +6,7 @@ The last update for the [conda-pack documentation](https://conda.github.io/conda
 
 To use conda-pack for Hilbert, use the following steps:
 
-(this code assumes you want to install _conda-pack_ in your "base" environment. If you create a separate environment for it, then activate it before proceeding with the packing step (2) )
+(this code assumes you want to install `conda-pack` in your "base" environment. If you create a separate environment for it, then activate it before proceeding with the packing step (2) )
 
 1. install conda-pack locally, either with _conda_ or from _PiPI_
 ```
@@ -42,7 +42,7 @@ tar -xzf my_env.tar.gz -C my_env
 
 5. (optional) Activate the environment. This adds **my_env/bin** to your path
 
-(pay attention to the "/" at the end. Otherwise if you have pre-existing conda environment with the same name in "**/home/${USER}/miniconda3/envs/**", it will activate the one in the "envs" location)
+(pay attention to the "/" at the end. Otherwise if you have pre-existing conda environment with the same name in `/home/${USER}/miniconda3/envs/`, it will activate the one in the "envs" location)
 
 (this step becomes mandatory if there is no python installed on the cluster)
 
